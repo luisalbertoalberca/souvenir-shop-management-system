@@ -1,39 +1,68 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
-        <form class="d-flex" role="search" action="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-        <div class="d-flex mx-2">
-            <a class="btn btn-success" href="login.jsp">Inicia sesión</a>
-        </div>
+<div id="header" class="sticky-top bg-white">
+    <div class="py-2">
+        <h5 class="text-center mt-2 font-monospace text-secondary titulo">Bienvenido a nuestra tienda</h5>
+        <hr>
     </div>
-  </div>
-</nav>
+    <div>
+        <header class="d-grid container-sm">
+            <div class="row">
+                <div class="col d-flex justify-content-start align-items-center">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div class="col-6 d-flex justify-content-center">
+                    <a href="<%= request.getContextPath()%>">
+                        <img alt="hangertips"
+                             srcset="//hangertips.com/cdn/shop/files/logohangertips512.png?v=1670427257&amp;width=50 50w, //hangertips.com/cdn/shop/files/logohangertips512.png?v=1670427257&amp;width=100 100w, //hangertips.com/cdn/shop/files/logohangertips512.png?v=1670427257&amp;width=150 150w, //hangertips.com/cdn/shop/files/logohangertips512.png?v=1670427257&amp;width=200 200w, //hangertips.com/cdn/shop/files/logohangertips512.png?v=1670427257&amp;width=250 250w, //hangertips.com/cdn/shop/files/logohangertips512.png?v=1670427257&amp;width=300 300w, //hangertips.com/cdn/shop/files/logohangertips512.png?v=1670427257&amp;width=400 400w, //hangertips.com/cdn/shop/files/logohangertips512.png?v=1670427257&amp;width=500 500w"
+                             width="150" height="52.734375">
+                    </a>
+                </div>
+                <div class="col d-flex justify-content-end align-items-center">
+                    <a href="#" class="text-secondary">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                    <a href="login" class="text-secondary mx-4">
+                        <i class="fa-solid fa-user"></i>
+                    </a>
+                </div>
+            </div>
+            <!-- Barra de navegación - Bottom -->
+            <div class="row mt-4 mb-4">
+                <div class="col"></div>
+                <!-- Menu - links -->
+                <div class="col-6">
+                    <ul class="list-group list-group-flush list-group-horizontal list-unstyled">
+                        <li class="list-group-item link"></li>
+                        <li class="list-group-item link text-secondary link-underline-opacity-0">
+                            <a class="text-secondary link-underline link-underline-opacity-0 current" href="<%= request.getContextPath()%>">Inicio</a>
+                        </li>
+                        <li class="list-group-item link text-secondary link-underline-opacity-0">
+                            <a class="text-secondary link-underline link-underline-opacity-0 current"
+                               href="category/men">Hombre</a>
+                        </li>
+                        <li class="list-group-item link text-secondary link-underline-opacity-0">
+                            <a class="text-secondary link-underline link-underline-opacity-0 current"
+                               href="category/women">Mujer</a>
+                        </li>
+                        <li class="list-group-item link text-secondary link-underline-opacity-0">
+                            <a class="text-secondary link-underline link-underline-opacity-0 current"
+                               href="category/children">Niños</a>
+                        </li>
+                        <li class="list-group-item link text-secondary link-underline-opacity-0">
+                            <a class="text-secondary link-underline link-underline-opacity-0 current"
+                               href="category/accessories">Accesorios</a>
+                        </li>
+                        <li class="list-group-item link text-secondary link-underline-opacity-0">
+                            <a class="text-secondary link-underline link-underline-opacity-0 current"
+                               href="#">Tiendas</a>
+                        </li>
+                        <li class="list-group-item link text-secondary link-underline-opacity-0">
+                            <a class="text-secondary link-underline link-underline-opacity-0 current" href="#">Más</a>
+                        </li>
+                        <li class="list-group-item link"></li>
+                    </ul>
+                </div>
+                <div class="col"></div>
+            </div>
+        </header>
+    </div>
+</div>

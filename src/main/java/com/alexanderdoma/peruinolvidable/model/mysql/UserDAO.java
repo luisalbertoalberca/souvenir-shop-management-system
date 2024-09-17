@@ -21,7 +21,6 @@ public class UserDAO implements IUser{
     private final String DELETE = SQLSentencesManager.getProperty("USER_DELETE");
     private final String GETBYID = SQLSentencesManager.getProperty("USER_GETBYID");
     private final String VERIFY = SQLSentencesManager.getProperty("USER_VERIFY");
-    
     Connector objConnector = null;
 
     @Override
@@ -131,7 +130,7 @@ public class UserDAO implements IUser{
             objConnector = new Connector();
             Connection objConnection = objConnector.getConnection();
             objPreparedStatement = objConnection.prepareCall(DELETE);
-            objPreparedStatement.setInt(0, o.getId());
+            objPreparedStatement.setInt(1, o.getId());
             isSuccess = objPreparedStatement.execute();
         } catch (SQLException e) {
             throw new DAOException(MessagesManager.getProperty("DATABASE_ERROR_DELETE") + e.getMessage());
@@ -155,7 +154,7 @@ public class UserDAO implements IUser{
             objConnector = new Connector();
             Connection objConnection = objConnector.getConnection();
             objPreparedStatement = objConnection.prepareCall(GETBYID);
-            objPreparedStatement.setInt(0, o.getId());
+            objPreparedStatement.setInt(1, o.getId());
             objResultSet = objPreparedStatement.executeQuery();
             objUser = getObject(objResultSet);
         } catch (SQLException e) {

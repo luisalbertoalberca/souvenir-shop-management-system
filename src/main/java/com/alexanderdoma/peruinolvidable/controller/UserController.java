@@ -11,8 +11,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-@WebServlet(name = "UserController", urlPatterns = {"/user"})
+@WebServlet(name = "UserController", urlPatterns = {"/user", "/login", "/session"})
 public class UserController extends HttpServlet {
     
     private UserDAO objUserDAO = new UserDAO();
@@ -44,14 +45,26 @@ public class UserController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        try {
-            List<User> objUsersList = objUserDAO.getAll();
-            request.setAttribute("users", objUsersList);
-            request.getRequestDispatcher("users.jsp").forward(request, response);
-        } catch (Exception ex) {
-            request.setAttribute("users", null);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("users.jsp");
+        String action = request.getServletPath();
+        switch (action) {
+            case "/login":
+                try {
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+                    dispatcher.forward(request, response);
+                } catch (IOException | ServletException e) {
+                }
+                break;
+            default:
+                throw new AssertionError();
         }
+//        try {
+//            List<User> objUsersList = objUserDAO.getAll();
+//            request.setAttribute("users", objUsersList);
+//            request.getRequestDispatcher("users.jsp").forward(request, response);
+//        } catch (Exception ex) {
+//            request.setAttribute("users", null);
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("users.jsp");
+//        }
     }
 
     /**
@@ -66,9 +79,9 @@ public class UserController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        String action = request.getParameter("action");
+        String action = request.getServletPath();
         switch (action) {
-            case "login":
+            case "/session":
                 String username = request.getParameter("username");
                 String password = request.getParameter("password");
                 try {
@@ -79,14 +92,15 @@ public class UserController extends HttpServlet {
                         dispatcher.forward(request, response);
                         return;
                     }
-                    request.setAttribute("status", "success");
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
-                    dispatcher.forward(request, response);
+                    
+                    HttpSession session = request.getSession();
+                    session.setAttribute("status", "success");
+                    response.sendRedirect(request.getContextPath());
                 } catch (DAOException | IOException | ServletException ex) {
                     System.out.println(ex.getMessage());
                 }
                 break;
-            case "insert":
+            case "/insert":
                 User objUser = new User();
                 objUser.setName(request.getParameter("name"));
                 objUser.setLastname(request.getParameter("lastname"));
@@ -106,6 +120,8 @@ public class UserController extends HttpServlet {
                 } catch (DAOException | IOException | ServletException ex) {
                     System.out.println(ex.getMessage());
                 }
+                break;
+            default:
                 break;
         }
     }

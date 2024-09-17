@@ -27,7 +27,7 @@
                             <h2>Hola de nuevo</h2>
                             <p>Nos alegra verte de vuelta.</p>
                         </div>
-                        <form action="user" method="post">
+                        <form action="session" method="post">
                             <input type="hidden" name="action" value="login">
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control form-control-lg bg-light fs-6" required="required" name = "username" placeholder="Correo electrónico">
