@@ -14,14 +14,13 @@ public class User {
     private String phone;
     private Date birthdate;
     private String gender;
+    private String address;
     private Timestamp created_at;
-    private int payment_method_id;
-    private int address_id;
 
     public User() {
     }
-
-    public User(Integer id, String name, String lastname, String username, String password, String email, String dni, String phone, Date birthdate, String gender, Timestamp created_at, int payment_method_id, int address_id) {
+    
+    public User(Integer id, String name, String lastname, String username, String password, String email, String dni, String phone, Date birthdate, String gender, String address, Timestamp created_at) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
@@ -32,9 +31,8 @@ public class User {
         this.phone = phone;
         this.birthdate = birthdate;
         this.gender = gender;
+        this.address = address;
         this.created_at = created_at;
-        this.payment_method_id = payment_method_id;
-        this.address_id = address_id;
     }
 
     public Integer getId() {
@@ -117,6 +115,14 @@ public class User {
         this.gender = gender;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
     public Timestamp getCreated_at() {
         return created_at;
     }
@@ -125,19 +131,8 @@ public class User {
         this.created_at = created_at;
     }
 
-    public int getPayment_method_id() {
-        return payment_method_id;
-    }
-
-    public void setPayment_method_id(int payment_method_id) {
-        this.payment_method_id = payment_method_id;
-    }
-
-    public int getAddress_id() {
-        return address_id;
-    }
-
-    public void setAddress_id(int address_id) {
-        this.address_id = address_id;
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", name=" + name + ", lastname=" + lastname + ", username=" + username + '}';
     }
 }

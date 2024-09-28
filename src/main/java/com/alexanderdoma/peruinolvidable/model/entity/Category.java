@@ -1,13 +1,47 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.alexanderdoma.peruinolvidable.model.entity;
 
-/**
- *
- * @author Alexander
- */
+import java.sql.Timestamp;
+
 public class Category {
+    private Integer id;
+    private String name;
+    private Timestamp created_at;
+
+    public Category() {
+    }
     
+    public Category(Integer id, String name, Timestamp created_at) {
+        this.id = id;
+        this.name = name;
+        this.created_at = created_at;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Timestamp getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Timestamp created_at) {
+        this.created_at = created_at;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" + "id=" + id + ", name=" + name + ", created_at=" + created_at + '}';
+    }
 }

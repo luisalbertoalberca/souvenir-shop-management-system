@@ -15,7 +15,7 @@
         <%@include file="components/header.jsp"%>
         
         <div class="container-sm">
-            <div class="row row-cols-3 justify-content-between">
+            <div class="row row-cols-4">
                 <c:forEach items="${products}" var = "product">
                     <div class="col my-3">
                         <div class="card" style="border: none">
@@ -24,7 +24,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">${product.getName()}</h5>
                                 <p class="card-text">${product.getDescription()} - S/.${product.getPrice()}</p>
-                                <a href="/product/search?id=${product.getId()}" class="btn btn-primary">Comprar</a>
+                                <a href="product?id=${product.getId()}" class="btn btn-primary">Ver</a>
                             </div>
                         </div>
                     </div>

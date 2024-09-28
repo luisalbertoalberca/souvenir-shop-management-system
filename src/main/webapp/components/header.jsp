@@ -1,8 +1,4 @@
-<div id="header" class="sticky-top bg-white">
-    <div class="py-2">
-        <h5 class="text-center mt-2 font-monospace text-secondary titulo">Bienvenido a nuestra tienda</h5>
-        <hr>
-    </div>
+<div id="header" class="sticky-top bg-white pt-3">
     <div>
         <header class="d-grid container-sm">
             <div class="row">
@@ -20,9 +16,15 @@
                     <a href="#" class="text-secondary">
                         <i class="fa-solid fa-cart-shopping"></i>
                     </a>
-                    <a href="login" class="text-secondary mx-4">
-                        <i class="fa-solid fa-user"></i>
-                    </a>
+                    <% if(session.getAttribute("user_id") != null){ %>
+                        <a href="profile" class="text-secondary mx-4">
+                            <i class="fa-solid fa-user"></i>
+                        </a>
+                    <%}else {%>
+                        <a href="login" class="text-secondary mx-4">
+                            <i class="fa-solid fa-user"></i>
+                        </a>
+                    <%}%>
                 </div>
             </div>
             <!-- Barra de navegación - Bottom -->

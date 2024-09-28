@@ -1,3 +1,4 @@
+<%@page import="com.alexanderdoma.peruinolvidable.model.entity.User"%>
 <%@page import="java.util.List"%>
 <%@page import="com.alexanderdoma.peruinolvidable.model.mysql.ProductDAO"%>
 <%@page import="com.alexanderdoma.peruinolvidable.model.entity.Product"%>
@@ -8,14 +9,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Perú Inolvidable | Tienda online</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <link rel="stylesheet" href="assets/css/index.css"/>
+        <%@include file="components/links.jsp" %>
     </head>
     <body>
-        <input type="hidden" id="status" value="<%=session.getAttribute("status")%>">
-        <%@include file="components/header.jsp"%>
-
+        
+        <%@include file="components/header.jsp" %>
         <!-- Banner -->
         <div>
             <img
@@ -24,24 +22,20 @@
                 srcset="//hangertips.com/cdn/shop/files/banner-polomujer_1940bac1-9525-437c-9cf7-77b0e5034eba.jpg?v=1670454876&amp;width=375 375w, //hangertips.com/cdn/shop/files/banner-polomujer_1940bac1-9525-437c-9cf7-77b0e5034eba.jpg?v=1670454876&amp;width=550 550w, //hangertips.com/cdn/shop/files/banner-polomujer_1940bac1-9525-437c-9cf7-77b0e5034eba.jpg?v=1670454876&amp;width=750 750w, //hangertips.com/cdn/shop/files/banner-polomujer_1940bac1-9525-437c-9cf7-77b0e5034eba.jpg?v=1670454876&amp;width=1100 1100w, //hangertips.com/cdn/shop/files/banner-polomujer_1940bac1-9525-437c-9cf7-77b0e5034eba.jpg?v=1670454876&amp;width=1500 1500w"
                 width="1920" height="800.0" loading="lazy" sizes="100vw">
         </div>
-        
-        
         <div class="container-sm">
-            <div class="row row-cols-4 gap-1">
+            <div class="row my-3 row-cols-4">
                 <%
                     ProductDAO objProductDAO = new ProductDAO();
                     List<Product> objProductsList = objProductDAO.getAll();
                     for (Product objProduct : objProductsList) {%>
-                <div class="col my-3">
-                    <div class="card" style="border: none">
-                        <img src="//hangertips.com/cdn/shop/products/cuymarron_1.jpg?v=1670366071&amp;width=450" alt="Medias Cuy"
+                    <a class="card col text-decoration-none hover-zoom" style="border: none" href="product?id=<%=objProduct.getId()%>">
+                        <img src="//hangertips.com/cdn/shop/products/cuymarron_1.jpg?v=1670366071&amp" style="width: 250px" alt="Medias Cuy"
                              class="motion-reduce hover-zoom" loading="lazy">
                         <div class="card-body p-0">
                             <p class="card-title" style="font-size: 15px"><%= objProduct.getName()%></p>
                             <p class="card-text">S/. <%= objProduct.getPrice()%> PEN</p>
                         </div>
-                    </div>
-                </div>
+                    </a>
                 <%}%>
             </div>
         </div>
@@ -133,35 +127,6 @@
 
             </div>
         </div>
-
-        <hr>
         <%@include file="components/footer.jsp"%>
-
-        <hr>
-        <!-- Texto de Derechos -->
-
-        <div class="container-sm d-flex justify-content-center">
-            <small class="text-secondary text-center derechos">
-                @ 2024, hangertips Tecnología de Shopify
-            </small>
-        </div>
-
-
-        <!-- Script de Bootstrap -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script type="text/javascript">
-                var status = document.getElementById("status").value;
-                if(status == "success") {
-                    Swal.fire({
-                        title: "Welcome",
-                        text: "That thing is still around?",
-                        icon: "success"
-                    });
-                }
-        </script>
     </body>
 </html>

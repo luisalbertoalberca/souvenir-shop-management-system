@@ -2,9 +2,10 @@ package com.alexanderdoma.peruinolvidable.model.mysql;
 
 import com.alexanderdoma.peruinolvidable.config.Connector;
 import com.alexanderdoma.peruinolvidable.model.DAOException;
-import com.alexanderdoma.peruinolvidable.model.IProduct;
-import com.alexanderdoma.peruinolvidable.model.entity.Category;
-import com.alexanderdoma.peruinolvidable.model.entity.Product;
+import com.alexanderdoma.peruinolvidable.model.IOrder;
+import com.alexanderdoma.peruinolvidable.model.entity.Order;
+import com.alexanderdoma.peruinolvidable.model.entity.User;
+import com.alexanderdoma.peruinolvidable.model.entity.Orderline;
 import com.alexanderdoma.peruinolvidable.utilies.MessagesManager;
 import com.alexanderdoma.peruinolvidable.utilies.SQLSentencesManager;
 import java.sql.CallableStatement;
@@ -15,30 +16,37 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductDAO implements IProduct {
-
-    private final String GETALL = SQLSentencesManager.getProperty("PRODUCT.GETALL");
-    private final String INSERT = SQLSentencesManager.getProperty("PRODUCT.INSERT");
-    private final String UPDATE = SQLSentencesManager.getProperty("PRODUCT.UPDATE");
-    private final String DELETE = SQLSentencesManager.getProperty("PRODUCT.DELETE");
-    private final String GETBYID = SQLSentencesManager.getProperty("PRODUCT.GETBYID");
+public class OrderDAO implements IOrder{
+    
+    private final String GETALL = SQLSentencesManager.getProperty("ORDER.GETALL");
+    private final String INSERT = SQLSentencesManager.getProperty("ORDER.INSERT");
+    private final String UPDATE = SQLSentencesManager.getProperty("ORDER.UPDATE");
+    private final String DELETE = SQLSentencesManager.getProperty("ORDER.DELETE");
+    private final String GETBYID = SQLSentencesManager.getProperty("ORDER.GETBYID");
     
     @Override
-    public void add(Product o) throws DAOException {
+    public void add(Order objOrder, List<Orderline> orderlineList) throws DAOException {
         PreparedStatement objPreparedStatement = null;
         ResultSet objResultSet = null;
         try(Connection objConnection = Connector.getInstance().getConnection()) {
-            objPreparedStatement = objConnection.prepareStatement(INSERT);
+            objPreparedStatement = objConnection.prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
             int i=1;
-            objPreparedStatement.setString(i++, o.getName());
-            objPreparedStatement.setString(i++, o.getDescription());
-            objPreparedStatement.setDouble(i++, o.getPrice());
-            objPreparedStatement.setString(i++, o.getBrand());
-            objPreparedStatement.setInt(i++, o.getStock());
-            objPreparedStatement.setBoolean(i++, o.getIsActive());
-            objPreparedStatement.setString(i++, o.getImage());
-            objPreparedStatement.setInt(i++, o.getCategory().getId());
+            objPreparedStatement.setDate(i++, objOrder.getDate());
+            objPreparedStatement.setDouble(i++, objOrder.getSubtotal());
+            objPreparedStatement.setDouble(i++, objOrder.getTotal());
+            objPreparedStatement.setString(i++, objOrder.getStatus());
+            objPreparedStatement.setString(i++, objOrder.getPayment_id());
+            objPreparedStatement.setInt(i++, objOrder.getUser().getId());
             objPreparedStatement.executeUpdate();
+            objResultSet = objPreparedStatement.getGeneratedKeys();
+            if(objResultSet.next()){
+                objOrder.setId(objResultSet.getInt(1));
+                OrderlineDAO objOrderlineDAO = new OrderlineDAO();
+                for(Orderline objOrderline : orderlineList){
+                    objOrderline.setOrder(objOrder);
+                    objOrderlineDAO.add(objOrderline);
+                }
+            }
             objConnection.close();
         } catch (SQLException e) {
             throw new DAOException(MessagesManager.getProperty("DATABASE.ERROR.INSERT") + e.getMessage());
@@ -53,20 +61,18 @@ public class ProductDAO implements IProduct {
     }
 
     @Override
-    public Product update(Product o) throws DAOException {
+    public Order update(Order o) throws DAOException {
         PreparedStatement objPreparedStatement = null;
         ResultSet objResultSet = null;
         try(Connection objConnection = Connector.getInstance().getConnection()) {
             objPreparedStatement = objConnection.prepareStatement(UPDATE);
             int i=1;
-            objPreparedStatement.setString(i++, o.getName());
-            objPreparedStatement.setString(i++, o.getDescription());
-            objPreparedStatement.setDouble(i++, o.getPrice());
-            objPreparedStatement.setString(i++, o.getBrand());
-            objPreparedStatement.setInt(i++, o.getStock());
-            objPreparedStatement.setBoolean(i++, o.getIsActive());
-            objPreparedStatement.setString(i++, o.getImage());
-            objPreparedStatement.setInt(i++, o.getCategory().getId());            
+            objPreparedStatement.setDate(i++, o.getDate());
+            objPreparedStatement.setDouble(i++, o.getSubtotal());
+            objPreparedStatement.setDouble(i++, o.getTotal());
+            objPreparedStatement.setString(i++, o.getStatus());
+            objPreparedStatement.setString(i++, o.getPayment_id());
+            objPreparedStatement.setInt(i++, o.getUser().getId());
             objPreparedStatement.setInt(i++, o.getId());
             objPreparedStatement.executeUpdate();
             objConnection.close();
@@ -90,6 +96,7 @@ public class ProductDAO implements IProduct {
         try(Connection objConnection = Connector.getInstance().getConnection()) {
             objPreparedStatement = objConnection.prepareCall(DELETE);
             objPreparedStatement.setInt(1, id);
+            new OrderlineDAO().delete(id);
             objPreparedStatement.executeUpdate();
             objConnection.close();
         } catch (SQLException e) {
@@ -105,19 +112,19 @@ public class ProductDAO implements IProduct {
     }
 
     @Override
-    public List<Product> getAll() throws DAOException {
+    public List<Order> getAll() throws DAOException {
         CallableStatement objCallableStatement = null;
         ResultSet objResultSet = null;
-        List<Product> objProductsList = new ArrayList<>();
+        List<Order> objOrdersList = new ArrayList<>();
         try(Connection objConnection = Connector.getInstance().getConnection()) {
             objCallableStatement = objConnection.prepareCall(GETALL);
             objCallableStatement.execute();
             objResultSet = objCallableStatement.getResultSet();
             while(objResultSet.next()) {
-                objProductsList.add(getObject(objResultSet));
+                objOrdersList.add(getObject(objResultSet));
             }
             objConnection.close();
-            return objProductsList;
+            return objOrdersList;
         } catch (SQLException ex) {
             throw new DAOException(MessagesManager.getProperty("DATABASE.ERROR.GETALL") + ex.getMessage());
         } finally {
@@ -131,20 +138,20 @@ public class ProductDAO implements IProduct {
     }
 
     @Override
-    public Product getById(int id) throws DAOException {
+    public Order getById(int id) throws DAOException {
         CallableStatement objCallableStatement = null;
         ResultSet objResultSet = null;
-        Product objProduct = null;
+        Order objOrder = null;
         try(Connection objConnection = Connector.getInstance().getConnection()) {
             objCallableStatement = objConnection.prepareCall(GETBYID);
             objCallableStatement.setInt(1, id);
             objCallableStatement.execute();
             objResultSet = objCallableStatement.getResultSet();
             while(objResultSet.next()){
-                objProduct = getObject(objResultSet);           
+                objOrder = getObject(objResultSet);           
             }
             objConnection.close();
-            return objProduct;
+            return objOrder;
         } catch (SQLException e) {
             throw new DAOException(MessagesManager.getProperty("DATABASE.ERROR.GETBYID") + e.getMessage());
         } finally {
@@ -158,23 +165,26 @@ public class ProductDAO implements IProduct {
     }
 
     @Override
-    public Product getObject(ResultSet rs) throws DAOException {
+    public Order getObject(ResultSet rs) throws DAOException {
         try {
-            Category objCategory = new CategoryDAO().getObject(rs);
-            return new Product(
-                    rs.getInt("product_id"),
-                    rs.getString("product_name"),
-                    rs.getString("product_description"),
-                    rs.getDouble("product_price"),
-                    rs.getString("product_brand"),
-                    rs.getInt("product_stock"),
-                    rs.getBoolean("product_isActive"),
-                    rs.getString("product_image"),
-                    rs.getTimestamp("product_created_at"),
-                    objCategory
+            User objUser = new UserDAO().getById(rs.getInt("user_id"));
+            return new Order(
+                    rs.getInt("order_id"),
+                    rs.getDate("order_date"),
+                    rs.getDouble("order_subtotal"),
+                    rs.getDouble("order_total"),
+                    rs.getString("order_status"),
+                    rs.getString("order_payment_id"),
+                    rs.getTimestamp("order_created_at"),
+                    objUser
             );
         } catch (SQLException ex) {
             throw new DAOException(ex.getMessage());
         }
+    }
+
+    @Override
+    public void add(Order o) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

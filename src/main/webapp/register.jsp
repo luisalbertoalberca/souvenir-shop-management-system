@@ -12,7 +12,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-                    <form role="form" action="user" method="post">
+                    <form role="form" action="insert" method="post">
                         <input type="hidden" name="action" value="insert">
                         <h2>Registro de usuario</h2>
                         <hr class="colorgraph">

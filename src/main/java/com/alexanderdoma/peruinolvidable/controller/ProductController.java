@@ -4,73 +4,66 @@ import com.alexanderdoma.peruinolvidable.model.DAOException;
 import com.alexanderdoma.peruinolvidable.model.entity.Product;
 import com.alexanderdoma.peruinolvidable.model.mysql.ProductDAO;
 import java.io.IOException;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "ProductController", urlPatterns = {"/product"})
+@WebServlet(name = "ProductController", urlPatterns = {"/products", "/product"})
 public class ProductController extends HttpServlet {
-    private ProductDAO objProductDAO = new ProductDAO();
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    private final ProductDAO objProductDAO = new ProductDAO();
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-        try {
-            List<Product> objProductsList = objProductDAO.getAll();
-            request.setAttribute("products", objProductsList);
-            request.getRequestDispatcher("products.jsp").forward(request, response);
-        } catch (DAOException ex) {
-            System.out.println(ex.getMessage());
+        String action = request.getServletPath();
+        switch (action) {
+            case "/products":
+                getProducts(request);
+                request.getRequestDispatcher("products.jsp").forward(request, response);
+                break;
+                
+            case "/product":
+                getProduct(request);
+                request.getRequestDispatcher("product.jsp").forward(request, response);
+                break;
+                
+            default:
+                throw new AssertionError();
         }
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
+    
+    void getProduct(HttpServletRequest request){
+        int id = Integer.parseInt(request.getParameter("id"));
+        try {
+            request.setAttribute("objProduct", objProductDAO.getById(id));
+        } catch (DAOException ex) {
+            Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    void getProducts(HttpServletRequest request){
+        try {
+            request.setAttribute("products", objProductDAO.getAll());
+        } catch (DAOException ex) {
+            Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

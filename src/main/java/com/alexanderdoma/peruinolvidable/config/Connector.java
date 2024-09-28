@@ -6,9 +6,21 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Connector {
-    private static final String URL = DatabaseKeysManager.getProperty("URL");
-    private static final String USER = DatabaseKeysManager.getProperty("USER");
-    private static final String PASSWORD = DatabaseKeysManager.getProperty("PASSWORD");
+    private final String URL = DatabaseKeysManager.getProperty("URL");
+    private final String USER = DatabaseKeysManager.getProperty("USER");
+    private final String PASSWORD = DatabaseKeysManager.getProperty("PASSWORD");
+    private static Connector instance;
+    
+    public static Connector getInstance() {
+        if (instance == null){
+            synchronized (Connector.class){
+                if(instance == null){
+                    instance = new Connector();
+                }
+            }
+        }
+        return instance;
+    }
     
     public Connection getConnection(){
         Connection objConnection = null;
